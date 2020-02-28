@@ -5,9 +5,11 @@ import {
   Column,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserRO } from './user.dto';
+import { ProductEntity } from 'src/products/product.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -35,6 +37,12 @@ export class UserEntity {
     default: true,
   })
   active: boolean;
+
+  @OneToMany(
+    type => ProductEntity,
+    product => product.savedBy,
+  )
+  products: ProductEntity[];
 
   @BeforeInsert()
   async hashPassword() {

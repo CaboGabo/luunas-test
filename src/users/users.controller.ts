@@ -19,12 +19,12 @@ import { UserDTO } from './user.dto';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('/users')
+  @Get('users')
   showAllUsers() {
     return this.usersService.showAll();
   }
 
-  @Get('/users/:id')
+  @Get('users/:id')
   showOneUser(@Param('id') id: string) {
     return this.usersService.showOne(id);
   }
@@ -41,14 +41,14 @@ export class UsersController {
     return this.usersService.register(data);
   }
 
-  @Put('/users')
+  @Put('users')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   editUser(@User('id') id: string, @Body() data: Partial<UserDTO>) {
     return this.usersService.edit(id, data);
   }
 
-  @Delete('/users')
+  @Delete('users')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe())
   deleteUser(@User('id') id: string) {
