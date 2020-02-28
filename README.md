@@ -1,75 +1,65 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Luuna's test
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This is a REST Api for the Luuna's test. For this test I used Nestjs and MySql.
 
-## Description
+# Running the app
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+First of all you will need the **.env** file, that contains an api key in order to send notification emails.
+Once you have the .env file, you have to clone this repository, then open a terminal, cd to the directory of the project, and paste the .env file right there, then just type the command
 
-## Installation
+    npm install
 
-```bash
-$ npm install
-```
+and all the dependencies will be installed.
 
-## Running the app
+You have to create a database in mysql as well, and change the database name, the username and password at the **ormconfig.json** file
 
-```bash
-# development
-$ npm run start
+Finally, to run the app, you need to type the next command
 
-# watch mode
-$ npm run start:dev
+    npm run start
 
-# production mode
-$ npm run start:prod
-```
+## Entities
 
-## Test
+There are two entities, users and products.
 
-```bash
-# unit tests
-$ npm run test
+### Users
 
-# e2e tests
-$ npm run test:e2e
+- id (uuid)
+- created (Date)
+- email _(unique)_(string)
+- firstname (string)
+- lastname (string)
+- password (string)
+- active (boolean)
 
-# test coverage
-$ npm run test:cov
-```
+### Products
 
-## Support
+- id (uuid)
+- created (Date)
+- name (string)
+- price (number)
+- brand (string)
+- stock (number)
+- code _(unique)_(char 6)
+- active (boolean)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Endpoints
 
-## Stay in touch
+Once the app is running, you can start to make requests, the endpoints I used:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Users
 
-## License
+- **/auth/register** | POST |Receive email, firstname, lastname and password | Return the new user
+- **/auth/login** | POST | Receive email and password | Return a jwt
+- **/auth/whoami** | GET | This endpoint needs an authentication at the header of the request (jwt) | Return the user
+- **/users** | GET |Return all the users
+- **/users/:id** | GET |Return the user requested by the id
+- **/users/** | PUT | Receive email, firstname, lastname or password | Return the modified user | It needs JWT
+- **/users/** | DELETE | Return a message if the user has been deleted | It needs JWT
 
-  Nest is [MIT licensed](LICENSE).
+### Products
+
+- **/products** | GET | Return all the products
+- **/products/:code** | GET | Return the selected product by code
+- **/products** | POST | Receive name, price, brand, stock and code | Return the new product | It needs JWT
+- **/products/:code** | PUT | Receive name, price, brand, stock or code | Return the modified product | It needs JWT, only the user that created the product can change it
+- **/products/:code** | DELETE | Receive name, price, brand, stock or code | Return a message if the product has been deleted | It needs JWT, only the user that created the product can erase it
