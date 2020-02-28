@@ -8,6 +8,7 @@ import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { ProductsModule } from './products/products.module';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, ProductsModule],
@@ -16,6 +17,7 @@ import { ProductsModule } from './products/products.module';
     AppService,
     { provide: APP_FILTER, useClass: HttpErrorFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    EmailService,
   ],
 })
 export class AppModule {}

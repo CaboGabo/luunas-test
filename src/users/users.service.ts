@@ -4,12 +4,14 @@ import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserDTO } from './user.dto';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private emailService: EmailService,
   ) {}
 
   async showAll() {
@@ -62,7 +64,11 @@ export class UsersService {
     user = await this.userRepository.create(data);
     await this.userRepository.save(user);
 
-    // Send email
+    this.emailService.sendEmail(0, {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    });
 
     return user.toResponseObject();
   }
@@ -91,7 +97,11 @@ export class UsersService {
       where: { id, active: true },
     });
 
-    // Send email
+    this.emailService.sendEmail(1, {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    });
 
     return user.toResponseObject();
   }
@@ -102,7 +112,11 @@ export class UsersService {
     });
     await this.userRepository.update({ id: user.id }, { active: false });
 
-    // Send email
+    this.emailService.sendEmail(2, {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    });
 
     return {
       deleted: true,
