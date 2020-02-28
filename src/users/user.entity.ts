@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Column,
   BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserRO } from './user.dto';
@@ -30,7 +31,9 @@ export class UserEntity {
   @Column('text')
   password: string;
 
-  @Column('boolean')
+  @Column({
+    default: true,
+  })
   active: boolean;
 
   @BeforeInsert()
