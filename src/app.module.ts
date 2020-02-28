@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { HttpErrorFilter } from './shared/http-error.filter';
+import { ProductsModule } from './products/products.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule],
+  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, ProductsModule],
   controllers: [AppController],
   providers: [
     AppService,

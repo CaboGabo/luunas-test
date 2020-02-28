@@ -46,13 +46,14 @@ export class UserEntity {
   }
 
   toResponseObject(): UserRO {
-    const { id, created, email, firstname, lastname } = this;
+    const { id, created, email, firstname, lastname, active } = this;
     return {
       id,
       created,
       email,
       firstname,
       lastname,
+      active,
     };
   }
 }

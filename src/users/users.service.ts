@@ -36,11 +36,27 @@ export class UsersService {
     const { email } = data;
 
     let user = await this.userRepository.findOne({
-      where: { email, active: true },
+      where: { email },
     });
 
-    if (user) {
+    if (user && user.active) {
       throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
+    }
+
+    if (user && !user.active) {
+      // If email already exists at the database but the account has been deactivated, then we only change the data, we don't create a new user
+      data.password = await bcrypt.hash(data.password, 10);
+
+      await this.userRepository.update(
+        { id: user.id },
+        { ...data, active: true },
+      );
+
+      user = await this.userRepository.findOne({
+        where: { email, active: true },
+      });
+
+      return user.toResponseObject();
     }
 
     user = await this.userRepository.create(data);
@@ -88,7 +104,9 @@ export class UsersService {
 
     // Send email
 
-    return user.toResponseObject();
+    return {
+      deleted: true,
+    };
   }
 
   async validateUser(email: string, pass: string) {
